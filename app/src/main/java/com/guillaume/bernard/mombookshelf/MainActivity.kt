@@ -37,6 +37,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,12 +53,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.integration.compose.placeholder
 import com.guillaume.bernard.mombookshelf.model.Book
 import com.guillaume.bernard.mombookshelf.ui.theme.*
 import com.guillaume.bernard.mombookshelf.ui.theme.MomBookshelfTheme
@@ -82,7 +87,7 @@ fun MainView() {
     // A surface container using the 'background' color from the theme
     Scaffold(
         topBar = {
-            Row(Modifier.padding(16.dp)) {
+            Row(Modifier.padding(24.dp)) {
                 Toolbar(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -93,7 +98,10 @@ fun MainView() {
             BottomAppBar(
                 actions = {
                     IconButton(onClick = { /* do something */ }) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Localized description")
+                        Icon(
+                            Icons.Default.AccountCircle,
+                            contentDescription = "Localized description"
+                        )
                     }
                     IconButton(onClick = { /* do something */ }) {
                         Icon(
@@ -149,12 +157,12 @@ fun MainView() {
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 24.dp)
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -173,11 +181,35 @@ fun MainView() {
                     fontSize = 13.sp,
                 )
             }
-            Bookshelf(SampleData.books)
+
+            Card(
+                modifier = Modifier.padding(24.dp),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center) {
+                        BookView(book = SampleData.books.first())
+                    }
+                    Text(
+                        text = "Card Title",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    )
+                    Text(
+                        text = "This is some sample text for the card.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+//            Bookshelf(SampleData.books)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(24.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -197,7 +229,7 @@ fun MainView() {
                 )
             }
             LazyRow(
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 24.dp)
             ) {
                 items(SampleData.genres) {
                     Card(
@@ -248,77 +280,37 @@ fun Bookshelf(books: Array<Book>) {
                 BookView(it)
             }
         }
-        Shelf()
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun BookView(book: Book) {
-    Box(modifier = Modifier.padding(end = 10.dp)) {
+    Box(modifier = Modifier.padding(end = 10.dp)
+    ) {
         Box(
             modifier = Modifier
-                .size(height = 100.dp, width = 65.dp)
+                .size(height = 180.dp, width = 130.dp)
                 .offset(4.dp, (-2).dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp))
                 .background(BookPages)
         )
+
         Box(
             modifier = Modifier
-                .size(height = 100.dp, width = 65.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .size(height = 180.dp, width = 130.dp)
+                .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp))
                 .background(bookDefaultCovers.random())
-                .padding(8.dp)
         ) {
-            Text(
-                book.title,
-                fontSize = 10.sp,
-                color = Color.White,
-                lineHeight = 10.sp
+            GlideImage(
+                model = "https://cdn1.booknode.com/book_cover/72/full/1984-72084.jpg",
+                loading = placeholder(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier.fillMaxWidth()
             )
         }
     }
-}
-
-@Composable
-fun Shelf() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .offset(y = (-30).dp)
-            .zIndex(-10f)
-    ) {
-        Row {
-            Box(
-                modifier = Modifier
-                    .offset(x = 30.dp)
-                    .size(height = 50.dp, width = 60.dp)
-                    .clip(TriangleShape)
-                    .background(ShelfShadow)
-
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .size(height = 50.dp, width = 0.dp)
-                    .clip(RectangleShape)
-                    .background(ShelfShadow)
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(x = 30.dp)
-                .size(height = 16.dp, width = 0.dp)
-                .clip(RectangleShape)
-                .background(ShelfBorder)
-        )
-    }
-}
-
-private val TriangleShape = GenericShape { size, _ ->
-    moveTo(size.width / 2f, 0f)
-    lineTo(size.width, size.height)
-    lineTo(0f, size.height)
 }
 
 @Preview(
