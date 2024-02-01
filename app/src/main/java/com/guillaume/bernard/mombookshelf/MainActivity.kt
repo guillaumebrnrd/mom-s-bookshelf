@@ -88,7 +88,7 @@ fun MainView() {
         bottomBar = {
 
             NavigationBar {
-                NavigationBarItem(selected = false, onClick = {},
+                NavigationBarItem(selected = true, onClick = {},
                     icon = {
                         Icon(
                             Icons.Rounded.Home,
