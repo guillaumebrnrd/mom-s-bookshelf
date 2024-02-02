@@ -21,14 +21,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -55,7 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
-import com.guillaume.bernard.mombookshelf.model.Book
+import com.guillaume.bernard.mombookshelf.model.BookState
 import com.guillaume.bernard.mombookshelf.ui.theme.AppTheme
 import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
 import com.guillaume.bernard.mombookshelf.ui.theme.ralewayFamily
@@ -273,7 +269,7 @@ fun Toolbar(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookView(book: Book) {
+fun BookView(book: BookState) {
     Box(
         modifier = Modifier.padding(end = 10.dp)
     ) {

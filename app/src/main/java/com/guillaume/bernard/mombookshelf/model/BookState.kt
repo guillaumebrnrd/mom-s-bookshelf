@@ -1,10 +1,10 @@
 package com.guillaume.bernard.mombookshelf.model
 
-data class Book(
-    var title: String,
-    var published: Int,
-    var author: Author,
-    var isbn: String,
+data class BookState(
+    var title: String = "",
+    var published: Int = 0,
+    var author: Author = emptyAuthor,
+    var isbn: String = "",
     var genre: String = "",
     var description: String = ""
 ) {
@@ -12,7 +12,7 @@ data class Book(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Book
+        other as BookState
 
         if (title != other.title) return false
         if (published != other.published) return false
@@ -30,4 +30,6 @@ data class Book(
 data class Author(
     val firstName: String,
     val lastName: String,
+
 )
+val emptyAuthor = Author("", "")
