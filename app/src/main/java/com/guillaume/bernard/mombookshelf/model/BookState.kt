@@ -1,6 +1,7 @@
 package com.guillaume.bernard.mombookshelf.model
 
 data class BookState(
+    var id: Long = 0L,
     var title: String = "",
     var published: Int = 0,
     var author: Author = emptyAuthor,
@@ -30,6 +31,10 @@ data class BookState(
 data class Author(
     val firstName: String,
     val lastName: String,
+) {
+    override fun toString(): String {
+        return "$firstName $lastName"
+    }
+}
 
-)
 val emptyAuthor = Author("", "")

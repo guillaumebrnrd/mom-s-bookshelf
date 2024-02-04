@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.guillaume.bernard.mombookshelf.SampleData
 import com.guillaume.bernard.mombookshelf.model.BookState
+import com.guillaume.bernard.mombookshelf.ui.components.BookDetailed
 import com.guillaume.bernard.mombookshelf.ui.components.BookView
 
 @Composable
@@ -77,7 +78,7 @@ fun CollectionScreen(
                     modifier = Modifier
                         .padding(8.dp)
                 ) {
-                    BookView(
+                    BookDetailed(
                         modifier = Modifier.align(Alignment.Center),
                         book = book,
                         onClick = onBookClicked

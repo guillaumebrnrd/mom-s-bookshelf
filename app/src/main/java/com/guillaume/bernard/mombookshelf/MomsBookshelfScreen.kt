@@ -21,27 +21,40 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.guillaume.bernard.mombookshelf.ui.BookDetailScreen
 import com.guillaume.bernard.mombookshelf.ui.CollectionScreen
 import com.guillaume.bernard.mombookshelf.ui.HomeScreen
 import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
 
-enum class MomsBookshelfScreen(@StringRes val title: Int, val canNavigateBack: Boolean = true) {
-    Home(title = R.string.app_name, false),
-    Collection(title = R.string.title_collection, false),
-    Profile(title = R.string.title_profile, false),
-    NewBook(title = R.string.title_newbook),
-    BookDetail(title = R.string.none), // Dynamic title based on book's title
+enum class MomsBookshelfScreen(
+    @StringRes var title: Int, val route: String, val canNavigateBack: Boolean = true
+) {
+    Home(title = R.string.app_name, "home", false), Collection(
+        title = R.string.title_collection, "collection", false
+    ),
+    Profile(
+        title = R.string.title_profile, "profile", false
+    ),
+    NewBook(title = R.string.title_newbook, "new_book"), BookDetail(
+        title = R.string.none, "book/{bookId}"
+    ), // Dynamic title based on book's title
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,65 +62,56 @@ enum class MomsBookshelfScreen(@StringRes val title: Int, val canNavigateBack: B
 fun MomsBookshelfAppBar(
     modifier: Modifier = Modifier,
     currentScreen: MomsBookshelfScreen,
+    customTitle: String? = null, // null for [currentScreen.title] fallback
     navigateUp: () -> Unit,
 ) {
-    TopAppBar(
-        title = {
-            Text(
-                stringResource(currentScreen.title),
-                fontFamily = libreCaslonTextFamily,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        modifier = modifier,
-        navigationIcon = {
-            if (currentScreen.canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
+    TopAppBar(title = {
+        Text(
+            customTitle ?: stringResource(currentScreen.title),
+            fontFamily = libreCaslonTextFamily,
+            fontWeight = FontWeight.Bold
+        )
+    }, modifier = modifier, navigationIcon = {
+        if (currentScreen.canNavigateBack) {
+            IconButton(onClick = navigateUp) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(R.string.back_button)
+                )
             }
         }
-    )
+    })
 }
 
 @Composable
 fun MomsBookshelfApp(navController: NavHostController = rememberNavController()) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = MomsBookshelfScreen.valueOf(
-        backStackEntry?.destination?.route ?: MomsBookshelfScreen.Home.name
-    )
-    Scaffold(
-        topBar = {
-            MomsBookshelfAppBar(currentScreen = currentScreen, navigateUp = {
-                navController.navigateUp()
-            })
-        },
+    val currentScreen = MomsBookshelfScreen.values().find {
+        it.route == backStackEntry?.destination?.route
+    } ?: MomsBookshelfScreen.Home
+    var title by remember { mutableStateOf<String?>(null) }
 
+    Scaffold(topBar = {
+        MomsBookshelfAppBar(currentScreen = currentScreen, customTitle = title, navigateUp = {
+            navController.navigateUp()
+        })
+    },
         // Main navigation
         bottomBar = {
             NavigationBar {
-                NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Home,
-                    onClick = {
-                        if (currentScreen != MomsBookshelfScreen.Home) {
-                            navController.navigate(MomsBookshelfScreen.Home.name)
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            Icons.Rounded.Home,
-                            contentDescription = "Home"
-                        )
-                    },
-                    label = { Text("Home") }
-                )
-                NavigationBarItem(
-                    selected = currentScreen == MomsBookshelfScreen.Collection,
+                NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Home, onClick = {
+                    if (currentScreen != MomsBookshelfScreen.Home) {
+                        navController.navigate(MomsBookshelfScreen.Home.route) { popUpTo(0) }
+                    }
+                }, icon = {
+                    Icon(
+                        Icons.Rounded.Home, contentDescription = "Home"
+                    )
+                }, label = { Text("Home") })
+                NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Collection,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Collection) {
-                            navController.navigate(MomsBookshelfScreen.Collection.name)
+                            navController.navigate(MomsBookshelfScreen.Collection.route) { popUpTo(0) }
                         }
                     },
                     icon = {
@@ -117,66 +121,76 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                         )
                     },
                     label = { Text("Collection") })
-                NavigationBarItem(
-                    selected = currentScreen == MomsBookshelfScreen.Profile,
+                NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Profile,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Profile) {
-                            navController.navigate(MomsBookshelfScreen.Profile.name)
+                            navController.navigate(MomsBookshelfScreen.Profile.route) { popUpTo(0) }
                         }
                     },
                     icon = {
                         Icon(
-                            Icons.Rounded.AccountCircle,
-                            contentDescription = "Profile"
+                            Icons.Rounded.AccountCircle, contentDescription = "Profile"
                         )
                     },
-                    label = { Text(text = "Profile") }
-                )
+                    label = { Text(text = "Profile") })
             }
         },
 
         // Add a book button
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(MomsBookshelfScreen.NewBook.name)
-                },
-            ) {
-                Icon(Icons.Filled.Add, "Localized description")
+            if (!currentScreen.canNavigateBack) {
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(MomsBookshelfScreen.NewBook.route)
+                    },
+                ) {
+                    Icon(Icons.Filled.Add, stringResource(id = R.string.add_book_button))
+                }
             }
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = MomsBookshelfScreen.Home.name,
+            startDestination = MomsBookshelfScreen.Home.route,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
             // Home screen
-            composable(route = MomsBookshelfScreen.Home.name) {
-                HomeScreen(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    onBookClicked = { book ->  // TODO pass [book] as parameter
-                        navController.navigate(MomsBookshelfScreen.BookDetail.name)
-                    },
-                    onMoreBookTextClicked = { /* TODO on book's "see more" text clicked */ },
-                    onMoreGenreTextClicked = { /* TODO on genre's "see more" text clicked */ }
-                )
+            composable(route = MomsBookshelfScreen.Home.route) {
+                title = null
+                HomeScreen(modifier = Modifier.fillMaxSize(),
+                    onBookClicked = { book -> navController.navigate("book/${book.id}") },
+                    onMoreBookTextClicked = { navController.navigate(MomsBookshelfScreen.Collection.route) },
+                    onMoreGenreTextClicked = { /* TODO on genre's "see more" text clicked */ })
             }
             // Collection screen
-            composable(route = MomsBookshelfScreen.Collection.name) {
+            composable(route = MomsBookshelfScreen.Collection.route) {
+                title = null
                 CollectionScreen(
                     modifier = Modifier.fillMaxWidth(),
-                    onBookClicked = { book ->  // TODO pass [book] as parameter
-                        navController.navigate(MomsBookshelfScreen.BookDetail.name)
-                    },
+                    onBookClicked = { book -> navController.navigate("book/${book.id}") },
                 )
             }
             // Profile screen
-            composable(route = MomsBookshelfScreen.Profile.name) {
+            composable(route = MomsBookshelfScreen.Profile.route) {
+                title = null
                 // TODO profile screen
+            }
+
+            // Book detail screen
+            composable(
+                route = MomsBookshelfScreen.BookDetail.route,
+                arguments = listOf(navArgument("bookId") { type = NavType.LongType })
+            ) {
+                val bookId = it.arguments?.getLong("bookId")
+                val book = SampleData.books.find { book -> book.id == bookId }
+                    ?: return@composable // TODO show an error if the book does not exists
+                title = book.title
+                BookDetailScreen(
+                    modifier = Modifier.fillMaxWidth(),
+                    book = book,
+                    onBackButtonClicked = { navController.navigateUp() },
+                    onEditBookButtonClicked = { /* TODO navigate to book's edition screen */ })
             }
         }
     }

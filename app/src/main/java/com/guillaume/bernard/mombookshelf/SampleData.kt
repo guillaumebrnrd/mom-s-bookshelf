@@ -14,6 +14,7 @@ object SampleData {
 
     val books: Array<BookState> = arrayOf(
         BookState(
+            id = 1L,
             title = "1894",
             published = 1949,
             author = Author("George", "Orwell"),
@@ -22,6 +23,7 @@ object SampleData {
             description = "De tous les carrefours importants, le visage à la moustache noire vous fixait du regard. BIG BROTHER VOUS REGARDE, répétait la légende, tandis que le regard des yeux noirs pénétrait les yeux de Winston... Au loin, un hélicoptère glissa entre les toits, plana un moment, telle une mouche bleue, puis repartit comme une flèche, dans un vol courbe. C'était une patrouille qui venait mettre le nez aux fenêtres des gens. Mais les patrouilles n'avaient pas d'importance. Seule comptait la Police de la Pensée"
         ),
         BookState(
+            id = 2L,
             title = "L'Étranger",
             published = 1942,
             author = Author("Albert", "Camus"),
@@ -30,6 +32,7 @@ object SampleData {
             description = "Quand la sonnerie a encore retenti, que la porte du box s'est ouverte, c'est le silence de la salle qui est monté vers moi, le silence, et cette singulière sensation que j'ai eue lorsque j'ai constaté que le jeune journaliste avait détourné les yeux. Je n'ai pas regardé du côté de Marie. Je n'en ai pas eu le temps parce que le président m'a dit dans une forme bizarre que j'aurais la tête tranchée sur une place publique au nom du peuple français..."
         ),
         BookState(
+            id = 3L,
             title = "Harry Potter and the philosopher stone",
             published = 1997,
             author = Author("J.K.", "Rowling"),
@@ -38,6 +41,7 @@ object SampleData {
             description = "Le jour de ses onze ans, Harry Potter, un orphelin élevé par un oncle et une tante qui le détestent, voit son existence bouleversée. Un géant vient le chercher pour l’emmener à Poudlard, une école de sorcellerie! Voler en balai, jeter des sorts, combattre les trolls : Harry Potter se révèle un sorcier doué. Mais un mystère entoure sa naissance et l’effroyable V…, le mage dont personne n’ose prononcer le nom. Amitié, surprises, dangers, scènes comiques, Harry découvre ses pouvoirs et la vie à Poudlard. Le premier tome des aventures du jeune héros vous ensorcelle aussitôt!"
         ),
         BookState(
+            id = 4L,
             title = "Harry Potter and the chamber of secret",
             published = 1997,
             author = Author("J.K.", "Rowling"),
@@ -46,6 +50,7 @@ object SampleData {
             description = "Une rentrée fracassante en voiture volante, une étrange malédiction qui s’abat sur les élèves, cette deuxième année à l’école des sorciers ne s’annonce pas de tout repos! Entre les cours de potions magiques, les matches de Quidditch et les combats de mauvais sorts, Harry et ses amis Ron et Hermione trouveront-ils le temps de percer le mystère de la Chambre des Secrets? Le deuxiè me volume des aventures de Harry Potter : un livre magique pour sorciers confirmés."
         ),
         BookState(
+            id = 5L,
             title = "Harry Potter and the prisoner of Azkaban",
             published = 1999,
             author = Author("J.K.", "Rowling"),
@@ -54,6 +59,7 @@ object SampleData {
             description = "Sirius Black, le dangereux criminel qui s'est échappé de la forteresse d'Azkaban, recherche Harry Potter. C'est donc sous bonne garde que l'apprenti sorcier fait sa troisième rentrée. Au programme : des cours de divination, la fabrication d'une potion de Ratatinage, le dressage des hippogriffes... Mais Harry est-il vraiment à l'abri du danger qui le menace ?"
         ),
         BookState(
+            id = 6L,
             title = "Harry Potter and the goblet of fire",
             published = 2000,
             author = Author("J.K.", "Rowling"),
@@ -62,6 +68,7 @@ object SampleData {
             description = "Harry Potter a quatorze ans et entre en quatrième année à Poudlard. Une grande nouvelle attend Harry, Ron et Hermione à leur arrivée : la tenue d'un tournoi de magie exceptionnel entre les plus célèbres écoles de sorcellerie. Déjà les délégations étrangères font leur entrée. Harry se réjouit... Trop vite. Il va se trouver plongé au coeur des événements les plus dramatiques qu'il ait jamais eu à affronter."
         ),
         BookState(
+            id = 7L,
             title = "Harry Potter and the phoenix order",
             published = 2003,
             author = Author("J.K.", "Rowling"),

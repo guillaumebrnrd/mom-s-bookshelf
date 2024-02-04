@@ -2,7 +2,10 @@
     <string name="app_name" translatable="false">MomBookshelf</string>
 
     <string name="none" translatable="false" />
+
     <string name="back_button">Back</string>
+    <string name="edit_button">Edit</string>
+    <string name="add_book_button">Add a book</string>
 
     <string name="title_collection">Collection</string>
     <string name="title_profile">Profile</string>
