@@ -30,21 +30,21 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
 import com.guillaume.bernard.mombookshelf.R
 import com.guillaume.bernard.mombookshelf.SampleData
-import com.guillaume.bernard.mombookshelf.model.BookState
+import com.guillaume.bernard.mombookshelf.model.Book
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun BookView(modifier: Modifier = Modifier, book: BookState, onClick: (BookState) -> Unit) {
+fun BookView(modifier: Modifier = Modifier, book: Book, onClick: (Book) -> Unit) {
     Box(
         modifier = modifier
-            .size(134.dp, 182.dp)
+            .size(134.dp, 202.dp)
             .shadow(15.dp, RoundedCornerShape(10.dp))
             .clickable { onClick(book) },
         contentAlignment = Alignment.BottomStart
     ) {
         Box(
             modifier = Modifier
-                .size(height = 180.dp, width = 130.dp)
+                .size(height = 200.dp, width = 130.dp)
                 .offset(4.dp, (-2).dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(Color.White)
@@ -52,15 +52,16 @@ fun BookView(modifier: Modifier = Modifier, book: BookState, onClick: (BookState
 
         Box(
             modifier = Modifier
-                .size(height = 180.dp, width = 130.dp)
+                .size(height = 200.dp, width = 130.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.secondary)
         ) {
             GlideImage(
-                model = "https://cdn1.booknode.com/book_cover/72/full/1984-72084.jpg",
-                loading = placeholder(R.drawable.ic_launcher_foreground),
+                model = book.cover,
+                loading = placeholder(R.drawable.book_default_cover),
+                failure = placeholder(R.drawable.book_failed_cover),
                 contentDescription = null,
-                contentScale = ContentScale.FillWidth,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -68,7 +69,7 @@ fun BookView(modifier: Modifier = Modifier, book: BookState, onClick: (BookState
 }
 
 @Composable
-fun BookDetailed(modifier: Modifier = Modifier, book: BookState, onClick: (BookState) -> Unit) {
+fun BookDetailed(modifier: Modifier = Modifier, book: Book, onClick: (Book) -> Unit) {
     Box(
         modifier = modifier,
         contentAlignment = Alignment.TopCenter
@@ -86,7 +87,7 @@ fun BookDetailed(modifier: Modifier = Modifier, book: BookState, onClick: (BookS
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 52.dp, bottom = 8.dp, start = 8.dp, end = 8.dp),
+                    .padding(top = 72.dp, bottom = 8.dp, start = 8.dp, end = 8.dp),
                 text = book.title,
                 textAlign = TextAlign.Center,
                 overflow = TextOverflow.Ellipsis,

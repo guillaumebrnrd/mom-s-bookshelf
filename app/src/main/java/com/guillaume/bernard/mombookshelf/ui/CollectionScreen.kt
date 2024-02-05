@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,16 +28,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.guillaume.bernard.mombookshelf.SampleData
-import com.guillaume.bernard.mombookshelf.model.BookState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.guillaume.bernard.mombookshelf.AppViewModelProvider
+import com.guillaume.bernard.mombookshelf.model.AllBooksViewModel
+import com.guillaume.bernard.mombookshelf.model.Book
 import com.guillaume.bernard.mombookshelf.ui.components.BookDetailed
-import com.guillaume.bernard.mombookshelf.ui.components.BookView
 
 @Composable
 fun CollectionScreen(
     modifier: Modifier = Modifier,
-    onBookClicked: (BookState) -> Unit
+    onBookClicked: (Book) -> Unit,
+    viewModel: AllBooksViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState = viewModel.uiState.collectAsState()
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
@@ -73,7 +77,7 @@ fun CollectionScreen(
             modifier = Modifier.padding(top = 16.dp),
             columns = GridCells.Fixed(2)
         ) {
-            items(SampleData.books) { book ->
+            items(uiState.value) { book ->
                 Box(
                     modifier = Modifier
                         .padding(8.dp)

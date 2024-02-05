@@ -1,43 +1,42 @@
 package com.guillaume.bernard.mombookshelf.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.guillaume.bernard.mombookshelf.AppViewModelProvider
 import com.guillaume.bernard.mombookshelf.R
-import com.guillaume.bernard.mombookshelf.SampleData
-import com.guillaume.bernard.mombookshelf.model.BookState
+import com.guillaume.bernard.mombookshelf.model.Book
+import com.guillaume.bernard.mombookshelf.model.DetailedBookViewModel
 import com.guillaume.bernard.mombookshelf.ui.components.BookView
 
 @Composable
 fun BookDetailScreen(
     modifier: Modifier = Modifier,
-    book: BookState,
     onBackButtonClicked: () -> Unit,
-    onEditBookButtonClicked: (BookState) -> Unit
+    onEditBookButtonClicked: (Book) -> Unit,
+    viewModel: DetailedBookViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState = viewModel.uiState.collectAsState()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -49,7 +48,7 @@ fun BookDetailScreen(
         BookView(
             modifier = Modifier
                 .padding(bottom = 24.dp),
-            book = book,
+            book = uiState.value,
             onClick = { /* Already in the right screen */ })
 
         Card(
@@ -62,21 +61,21 @@ fun BookDetailScreen(
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = book.title,
+                    text = uiState.value.title,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = book.author.toString(),
+                    text = uiState.value.author,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = book.published.toString(),
+                    text = uiState.value.published.toString(),
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     modifier = Modifier.padding(top = 6.dp),
-                    text = book.description,
+                    text = uiState.value.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
@@ -92,7 +91,7 @@ fun BookDetailScreen(
                 Text(stringResource(id = R.string.back_button))
             }
             Button(
-                onClick = { onEditBookButtonClicked(book) }) {
+                onClick = { onEditBookButtonClicked(uiState.value) }) {
                 Text(stringResource(id = R.string.edit_button))
             }
 
@@ -107,7 +106,6 @@ fun BookDetailScreenPreview() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        book = SampleData.books.random(),
         onBackButtonClicked = {},
         onEditBookButtonClicked = {}
     )

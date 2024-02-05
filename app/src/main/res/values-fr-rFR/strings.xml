@@ -8,6 +8,7 @@
     <string name="title_collection">Collection</string>
     <string name="title_profile">Profil</string>
     <string name="title_newbook">Nouveau livre</string>
+    <string name="title_book_detail">Détail</string>
 
     <string name="see_more">voir plus</string>
     <string name="last_book">Dernier ajout</string>

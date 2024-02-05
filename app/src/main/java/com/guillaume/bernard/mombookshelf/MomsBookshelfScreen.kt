@@ -4,8 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
@@ -21,7 +19,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,14 +43,13 @@ import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
 enum class MomsBookshelfScreen(
     @StringRes var title: Int, val route: String, val canNavigateBack: Boolean = true
 ) {
-    Home(title = R.string.app_name, "home", false), Collection(
-        title = R.string.title_collection, "collection", false
-    ),
-    Profile(
-        title = R.string.title_profile, "profile", false
-    ),
-    NewBook(title = R.string.title_newbook, "new_book"), BookDetail(
-        title = R.string.none, "book/{bookId}"
+    Home(title = R.string.app_name, "home", false),
+    Collection(title = R.string.title_collection, "collection", false),
+    Profile(title = R.string.title_profile, "profile", false),
+    NewBook(title = R.string.title_newbook, "new_book"),
+    BookDetail(
+        title = R.string.title_book_detail,
+        "book/{bookId}"
     ), // Dynamic title based on book's title
 }
 
@@ -62,12 +58,11 @@ enum class MomsBookshelfScreen(
 fun MomsBookshelfAppBar(
     modifier: Modifier = Modifier,
     currentScreen: MomsBookshelfScreen,
-    customTitle: String? = null, // null for [currentScreen.title] fallback
     navigateUp: () -> Unit,
 ) {
     TopAppBar(title = {
         Text(
-            customTitle ?: stringResource(currentScreen.title),
+            stringResource(currentScreen.title),
             fontFamily = libreCaslonTextFamily,
             fontWeight = FontWeight.Bold
         )
@@ -89,10 +84,9 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
     val currentScreen = MomsBookshelfScreen.values().find {
         it.route == backStackEntry?.destination?.route
     } ?: MomsBookshelfScreen.Home
-    var title by remember { mutableStateOf<String?>(null) }
 
     Scaffold(topBar = {
-        MomsBookshelfAppBar(currentScreen = currentScreen, customTitle = title, navigateUp = {
+        MomsBookshelfAppBar(currentScreen = currentScreen, navigateUp = {
             navController.navigateUp()
         })
     },
@@ -157,7 +151,6 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
         ) {
             // Home screen
             composable(route = MomsBookshelfScreen.Home.route) {
-                title = null
                 HomeScreen(modifier = Modifier.fillMaxSize(),
                     onBookClicked = { book -> navController.navigate("book/${book.id}") },
                     onMoreBookTextClicked = { navController.navigate(MomsBookshelfScreen.Collection.route) },
@@ -165,7 +158,6 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
             }
             // Collection screen
             composable(route = MomsBookshelfScreen.Collection.route) {
-                title = null
                 CollectionScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onBookClicked = { book -> navController.navigate("book/${book.id}") },
@@ -173,8 +165,11 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
             }
             // Profile screen
             composable(route = MomsBookshelfScreen.Profile.route) {
-                title = null
                 // TODO profile screen
+            }
+            // Add a book screen
+            composable(route = MomsBookshelfScreen.NewBook.route) {
+                // TODO add a book screen
             }
 
             // Book detail screen
@@ -182,13 +177,8 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                 route = MomsBookshelfScreen.BookDetail.route,
                 arguments = listOf(navArgument("bookId") { type = NavType.LongType })
             ) {
-                val bookId = it.arguments?.getLong("bookId")
-                val book = SampleData.books.find { book -> book.id == bookId }
-                    ?: return@composable // TODO show an error if the book does not exists
-                title = book.title
                 BookDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
-                    book = book,
                     onBackButtonClicked = { navController.navigateUp() },
                     onEditBookButtonClicked = { /* TODO navigate to book's edition screen */ })
             }

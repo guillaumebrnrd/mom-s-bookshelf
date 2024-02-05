@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,9 +33,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.guillaume.bernard.mombookshelf.AppViewModelProvider
 import com.guillaume.bernard.mombookshelf.R
 import com.guillaume.bernard.mombookshelf.SampleData
-import com.guillaume.bernard.mombookshelf.model.BookState
+import com.guillaume.bernard.mombookshelf.model.Book
+import com.guillaume.bernard.mombookshelf.model.LastBookViewModel
 import com.guillaume.bernard.mombookshelf.ui.components.BookView
 import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
 import com.guillaume.bernard.mombookshelf.ui.theme.ralewayFamily
@@ -42,10 +46,13 @@ import com.guillaume.bernard.mombookshelf.ui.theme.ralewayFamily
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onBookClicked: (BookState) -> Unit,
+    onBookClicked: (Book) -> Unit,
     onMoreBookTextClicked: () -> Unit,
     onMoreGenreTextClicked: () -> Unit,
+    viewModel: LastBookViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val uiState = viewModel.uiState.collectAsState()
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
@@ -111,7 +118,7 @@ fun HomeScreen(
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                BookView(book = SampleData.books.first(), onClick = onBookClicked)
+                BookView(book = uiState.value, onClick = onBookClicked)
                 Column(
                     modifier = Modifier
                         .padding(start = 12.dp)
@@ -119,21 +126,21 @@ fun HomeScreen(
                     verticalArrangement = Arrangement.Top
                 ) {
                     Text(
-                        text = "Book Title",
+                        text = uiState.value.title,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.padding(vertical = 8.dp)
                     )
                     Text(
-                        text = "Jean Neige",
+                        text = uiState.value.author,
                         style = MaterialTheme.typography.labelMedium
                     )
                     Text(
-                        text = "2006",
+                        text = uiState.value.published.toString(),
                         style = MaterialTheme.typography.labelMedium
                     )
                     Text(
                         modifier = Modifier.padding(top = 6.dp),
-                        text = "Lorem ipsum dolor sit amet, lorem ipsum dolor sit amet. Lormz dhiuoz zeir nknkigh zaih gi zehugig ihhharhi.",
+                        text = uiState.value.description,
                         style = MaterialTheme.typography.bodySmall,
                         color = Color.Gray
                     )
