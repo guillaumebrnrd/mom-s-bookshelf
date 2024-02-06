@@ -8,7 +8,9 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.guillaume.bernard.mombookshelf.model.AllBooksViewModel
 import com.guillaume.bernard.mombookshelf.model.DetailedBookViewModel
+import com.guillaume.bernard.mombookshelf.model.EditBookViewModel
 import com.guillaume.bernard.mombookshelf.model.LastBookViewModel
+import com.guillaume.bernard.mombookshelf.model.NewBookViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -23,6 +25,17 @@ object AppViewModelProvider {
         // DetailBookViewModel
         initializer {
             DetailedBookViewModel(
+                this.createSavedStateHandle(),
+                mbApplication().repository
+            )
+        }
+        // NewBookViewModel
+        initializer {
+            NewBookViewModel(mbApplication().repository)
+        }
+        // EditBookViewModel
+        initializer {
+            EditBookViewModel(
                 this.createSavedStateHandle(),
                 mbApplication().repository
             )

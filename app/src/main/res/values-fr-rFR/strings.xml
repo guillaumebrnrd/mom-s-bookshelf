@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="back_button">Retour</string>
-    <string name="edit_button">Editer</string>
-    <string name="add_book_button">Ajouter un livre</string>
+
+    <string name="nav_home">Accueil</string>
+    <string name="nav_collection">Collection</string>
+    <string name="nav_profile">Profil</string>
 
     <string name="title_collection">Collection</string>
     <string name="title_profile">Profil</string>
     <string name="title_newbook">Nouveau livre</string>
-    <string name="title_book_detail">Détail</string>
+    <string name="title_editbook">Edit book</string>
+    <string name="title_book_detail">Détail du livre</string>
+
+    <string name="back_button">Retour</string>
+    <string name="cancel_button">Annuler</string>
+    <string name="save_button">Enregistrer</string>
+    <string name="edit_button">Editer</string>
+    <string name="add_book_button">Ajouter un livre</string>
 
     <string name="see_more">voir plus</string>
     <string name="last_book">Dernier ajout</string>
+    <string name="search_placeholder">Titre, auteur, ...</string>
+    <string name="genres">Genres</string>
+
+    <string name="add_book_title">Titre</string>
+    <string name="add_book_author">Auteur</string>
+    <string name="add_book_published">Année</string>
+    <string name="add_book_description">Description</string>
 </resources>

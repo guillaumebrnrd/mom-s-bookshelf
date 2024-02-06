@@ -1,4 +1,4 @@
-package com.guillaume.bernard.mombookshelf
+package com.guillaume.bernard.mombookshelf.ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -35,10 +33,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.guillaume.bernard.mombookshelf.ui.BookDetailScreen
-import com.guillaume.bernard.mombookshelf.ui.CollectionScreen
-import com.guillaume.bernard.mombookshelf.ui.HomeScreen
+import com.guillaume.bernard.mombookshelf.R
 import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
+import kotlinx.coroutines.launch
 
 enum class MomsBookshelfScreen(
     @StringRes var title: Int, val route: String, val canNavigateBack: Boolean = true
@@ -47,10 +44,8 @@ enum class MomsBookshelfScreen(
     Collection(title = R.string.title_collection, "collection", false),
     Profile(title = R.string.title_profile, "profile", false),
     NewBook(title = R.string.title_newbook, "new_book"),
-    BookDetail(
-        title = R.string.title_book_detail,
-        "book/{bookId}"
-    ), // Dynamic title based on book's title
+    EditBook(title = R.string.title_editbook, "edit/{bookId}"),
+    BookDetail(title = R.string.title_book_detail, "book/{bookId}")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,6 +75,7 @@ fun MomsBookshelfAppBar(
 
 @Composable
 fun MomsBookshelfApp(navController: NavHostController = rememberNavController()) {
+    val coroutineScope = rememberCoroutineScope()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = MomsBookshelfScreen.values().find {
         it.route == backStackEntry?.destination?.route
@@ -99,9 +95,11 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                     }
                 }, icon = {
                     Icon(
-                        Icons.Rounded.Home, contentDescription = "Home"
+                        Icons.Rounded.Home,
+                        contentDescription = stringResource(id = R.string.nav_home)
                     )
-                }, label = { Text("Home") })
+                }, label = { Text(stringResource(id = R.string.nav_home)) })
+
                 NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Collection,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Collection) {
@@ -111,10 +109,11 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_book),
-                            contentDescription = "Collection"
+                            contentDescription = stringResource(id = R.string.nav_collection)
                         )
                     },
-                    label = { Text("Collection") })
+                    label = { Text(stringResource(id = R.string.nav_collection)) })
+
                 NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Profile,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Profile) {
@@ -123,10 +122,11 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                     },
                     icon = {
                         Icon(
-                            Icons.Rounded.AccountCircle, contentDescription = "Profile"
+                            Icons.Rounded.AccountCircle,
+                            contentDescription = stringResource(id = R.string.nav_profile)
                         )
                     },
-                    label = { Text(text = "Profile") })
+                    label = { Text(text = stringResource(id = R.string.nav_profile)) })
             }
         },
 
@@ -169,9 +169,33 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
             }
             // Add a book screen
             composable(route = MomsBookshelfScreen.NewBook.route) {
-                // TODO add a book screen
+                AddBookScreen(
+                    onCancelButtonClicked = { navController.navigateUp() },
+                    onSaveButtonClicked = {
+                        coroutineScope.launch {
+                            it.saveBook()
+                            navController.navigateUp()
+                        }
+                    }
+                )
             }
-
+            // Edit a book screen
+            composable(
+                route = MomsBookshelfScreen.EditBook.route,
+                arguments = listOf(navArgument("bookId") { type = NavType.LongType })
+            ) {
+                EditBookScreen(
+                    modifier = Modifier.fillMaxWidth(),
+                    onCancelButtonClicked = {
+                        navController.navigateUp()
+                    },
+                    onSaveButtonClicked = {
+                        coroutineScope.launch {
+                            it.updateBook()
+                            navController.navigateUp()
+                        }
+                    })
+            }
             // Book detail screen
             composable(
                 route = MomsBookshelfScreen.BookDetail.route,
@@ -180,7 +204,7 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                 BookDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onBackButtonClicked = { navController.navigateUp() },
-                    onEditBookButtonClicked = { /* TODO navigate to book's edition screen */ })
+                    onEditBookButtonClicked = { navController.navigate("edit/${it.id}") })
             }
         }
     }

@@ -26,10 +26,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.guillaume.bernard.mombookshelf.AppViewModelProvider
+import com.guillaume.bernard.mombookshelf.R
 import com.guillaume.bernard.mombookshelf.model.AllBooksViewModel
 import com.guillaume.bernard.mombookshelf.model.Book
 import com.guillaume.bernard.mombookshelf.ui.components.BookDetailed
@@ -50,7 +52,7 @@ fun CollectionScreen(
         val containerColor = MaterialTheme.colorScheme.surfaceVariant
         TextField(
             value = searchText,
-            placeholder = { Text(text = "Titre, auteur...") },
+            placeholder = { Text(text = stringResource(id = R.string.search_placeholder)) },
             singleLine = true,
             leadingIcon = {
                 Icon(

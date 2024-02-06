@@ -15,24 +15,6 @@ data class Book(
     var description: String = "",
     var cover: String = ""
 ) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Book
-
-        if (title != other.title) return false
-        if (published != other.published) return false
-        return author == other.author
-    }
-
-    override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + published
-        result = 31 * result + author.hashCode()
-        return result
-    }
-
     companion object {
         val defaultBook: Book = Book(
             id = -1L,

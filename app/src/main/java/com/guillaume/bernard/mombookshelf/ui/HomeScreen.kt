@@ -63,7 +63,7 @@ fun HomeScreen(
         val containerColor = MaterialTheme.colorScheme.surfaceVariant
         TextField(
             value = searchText,
-            placeholder = { Text(text = "Titre, auteur...") },
+            placeholder = { Text(text = stringResource(id = R.string.search_placeholder)) },
             singleLine = true,
             leadingIcon = {
                 Icon(
@@ -154,7 +154,7 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Genres",
+                text = stringResource(id = R.string.genres),
                 fontFamily = libreCaslonTextFamily,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
