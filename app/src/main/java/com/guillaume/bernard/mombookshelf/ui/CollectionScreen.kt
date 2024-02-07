@@ -42,7 +42,7 @@ fun CollectionScreen(
     onBookClicked: (Book) -> Unit,
     viewModel: AllBooksViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState = viewModel.searchResults.collectAsState()
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Top,
@@ -60,7 +60,11 @@ fun CollectionScreen(
                     contentDescription = null,
                 )
             },
-            onValueChange = { searchText = it },
+            onValueChange = {
+                // TODO filter uiState
+                searchText = it
+                viewModel.applyFilter(it)
+            },
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = containerColor,

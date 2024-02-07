@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -59,32 +61,7 @@ fun HomeScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
-        var searchText by remember { mutableStateOf("") }
         val containerColor = MaterialTheme.colorScheme.surfaceVariant
-        TextField(
-            value = searchText,
-            placeholder = { Text(text = stringResource(id = R.string.search_placeholder)) },
-            singleLine = true,
-            leadingIcon = {
-                Icon(
-                    Icons.Rounded.Search,
-                    contentDescription = null,
-                )
-            },
-            onValueChange = { searchText = it },
-            shape = RoundedCornerShape(10.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = containerColor,
-                unfocusedContainerColor = containerColor,
-                disabledContainerColor = containerColor,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -190,5 +167,15 @@ fun HomeScreen(
         }
 
     }
+}
 
+@Composable
+@Preview
+fun HomeScreenPreview() {
+    HomeScreen(
+        modifier = Modifier.fillMaxSize(),
+        onBookClicked = {},
+        onMoreBookTextClicked = {},
+        onMoreGenreTextClicked = {}
+    )
 }
