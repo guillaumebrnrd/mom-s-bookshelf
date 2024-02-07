@@ -21,4 +21,4 @@ Developed in Kotlin KMM with
 - Syncronize data in cloud 
 - Sharing though some socials networks
 - Retrieve book's data from ISBN code (google books api)
-- Web version of the project in some techno I don't master yet (probably Spring Boot with kotlin!)
+- Web version of the project in some techn I don't master yet (probably Spring Boot with kotlin!)
