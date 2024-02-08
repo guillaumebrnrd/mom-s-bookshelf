@@ -38,14 +38,25 @@ import com.guillaume.bernard.mombookshelf.ui.theme.libreCaslonTextFamily
 import kotlinx.coroutines.launch
 
 enum class MomsBookshelfScreen(
-    @StringRes var title: Int, val route: String, val canNavigateBack: Boolean = true
+    @StringRes var title: Int,
+    val routeWithArg: String,
+    val route: String,
+    val arg: String = "",
+    val canNavigateBack: Boolean = true
 ) {
-    Home(title = R.string.app_name, "home", false),
-    Collection(title = R.string.title_collection, "collection", false),
-    Profile(title = R.string.title_profile, "profile", false),
-    NewBook(title = R.string.title_newbook, "new_book"),
-    EditBook(title = R.string.title_editbook, "edit/{bookId}"),
-    BookDetail(title = R.string.title_book_detail, "book/{bookId}")
+    Home(title = R.string.app_name, "home", "home", canNavigateBack = false),
+    Collection(
+        title = R.string.title_collection,
+        "collection",
+        "collection",
+        canNavigateBack = false
+    ),
+    Profile(title = R.string.title_profile, "profile", "profile", canNavigateBack = false),
+    NewBook(title = R.string.title_newbook, "new_book", "new_book"),
+    EditBook(title = R.string.title_editbook, "edit/{bookId}", "edit/", "bookId"),
+    BookDetail(title = R.string.title_book_detail, "book/{bookId}", "book/", "bookId"),
+    Genres(title = R.string.title_genre, "genres", "genres"),
+    GenreDetail(title = R.string.title_genre, "genre/{genre}", "genre/", "genre")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -103,7 +114,9 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                 NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Collection,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Collection) {
-                            navController.navigate(MomsBookshelfScreen.Collection.route) { popUpTo(0) }
+                            navController.navigate(MomsBookshelfScreen.Collection.route) {
+                                popUpTo(0)
+                            }
                         }
                     },
                     icon = {
@@ -117,7 +130,9 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                 NavigationBarItem(selected = currentScreen == MomsBookshelfScreen.Profile,
                     onClick = {
                         if (currentScreen != MomsBookshelfScreen.Profile) {
-                            navController.navigate(MomsBookshelfScreen.Profile.route) { popUpTo(0) }
+                            navController.navigate(MomsBookshelfScreen.Profile.route) {
+                                popUpTo(0)
+                            }
                         }
                     },
                     icon = {
@@ -144,31 +159,31 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
         }) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = MomsBookshelfScreen.Home.route,
+            startDestination = MomsBookshelfScreen.Home.routeWithArg,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
             // Home screen
-            composable(route = MomsBookshelfScreen.Home.route) {
+            composable(route = MomsBookshelfScreen.Home.routeWithArg) {
                 HomeScreen(modifier = Modifier.fillMaxSize(),
-                    onBookClicked = { book -> navController.navigate("book/${book.id}") },
+                    onBookClicked = { book -> navController.navigate(MomsBookshelfScreen.BookDetail.route + book.id) },
                     onMoreBookTextClicked = { navController.navigate(MomsBookshelfScreen.Collection.route) },
-                    onMoreGenreTextClicked = { /* TODO on genre's "see more" text clicked */ })
+                    onMoreGenreTextClicked = { navController.navigate(MomsBookshelfScreen.Genres.route) })
             }
             // Collection screen
-            composable(route = MomsBookshelfScreen.Collection.route) {
+            composable(route = MomsBookshelfScreen.Collection.routeWithArg) {
                 CollectionScreen(
                     modifier = Modifier.fillMaxWidth(),
-                    onBookClicked = { book -> navController.navigate("book/${book.id}") },
+                    onBookClicked = { book -> navController.navigate(MomsBookshelfScreen.BookDetail.route + book.id) },
                 )
             }
             // Profile screen
-            composable(route = MomsBookshelfScreen.Profile.route) {
+            composable(route = MomsBookshelfScreen.Profile.routeWithArg) {
                 // TODO profile screen
             }
             // Add a book screen
-            composable(route = MomsBookshelfScreen.NewBook.route) {
+            composable(route = MomsBookshelfScreen.NewBook.routeWithArg) {
                 AddBookScreen(
                     onCancelButtonClicked = { navController.navigateUp() },
                     onSaveButtonClicked = {
@@ -181,8 +196,10 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
             }
             // Edit a book screen
             composable(
-                route = MomsBookshelfScreen.EditBook.route,
-                arguments = listOf(navArgument("bookId") { type = NavType.LongType })
+                route = MomsBookshelfScreen.EditBook.routeWithArg,
+                arguments = listOf(navArgument(MomsBookshelfScreen.EditBook.arg) {
+                    type = NavType.LongType
+                })
             ) {
                 EditBookScreen(
                     modifier = Modifier.fillMaxWidth(),
@@ -194,17 +211,36 @@ fun MomsBookshelfApp(navController: NavHostController = rememberNavController())
                             it.updateBook()
                             navController.navigateUp()
                         }
-                    })
+                    }
+                )
             }
             // Book detail screen
             composable(
-                route = MomsBookshelfScreen.BookDetail.route,
-                arguments = listOf(navArgument("bookId") { type = NavType.LongType })
+                route = MomsBookshelfScreen.BookDetail.routeWithArg,
+                arguments = listOf(navArgument(MomsBookshelfScreen.BookDetail.arg) {
+                    type = NavType.LongType
+                })
             ) {
                 BookDetailScreen(
                     modifier = Modifier.fillMaxWidth(),
+                    onGenreButtonClick = { navController.navigate(MomsBookshelfScreen.GenreDetail.route + it) },
                     onBackButtonClicked = { navController.navigateUp() },
-                    onEditBookButtonClicked = { navController.navigate("edit/${it.id}") })
+                    onEditBookButtonClicked = { navController.navigate(MomsBookshelfScreen.EditBook.route + it.id) })
+            }
+            // Genres screen
+            composable(route = MomsBookshelfScreen.Genres.routeWithArg) {
+                // TODO List all genres
+            }
+            // Genre detail
+            composable(
+                route = MomsBookshelfScreen.GenreDetail.routeWithArg,
+                arguments = listOf(
+                    navArgument(MomsBookshelfScreen.GenreDetail.arg) { type = NavType.StringType })
+            ) {
+                GenreDetailScreen(
+                    modifier = Modifier.fillMaxWidth(),
+                    onBookClicked = { navController.navigate(MomsBookshelfScreen.BookDetail.route + it.id) },
+                    onBackButtonClicked = { navController.navigateUp() })
             }
         }
     }

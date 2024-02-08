@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.guillaume.bernard.mombookshelf.model.AllBooksViewModel
+import com.guillaume.bernard.mombookshelf.model.BooksGenreViewModel
 import com.guillaume.bernard.mombookshelf.model.DetailedBookViewModel
 import com.guillaume.bernard.mombookshelf.model.EditBookViewModel
 import com.guillaume.bernard.mombookshelf.model.LastBookViewModel
@@ -36,6 +37,13 @@ object AppViewModelProvider {
         // EditBookViewModel
         initializer {
             EditBookViewModel(
+                this.createSavedStateHandle(),
+                mbApplication().repository
+            )
+        }
+        // BooksGenreViewModel
+        initializer {
+            BooksGenreViewModel(
                 this.createSavedStateHandle(),
                 mbApplication().repository
             )

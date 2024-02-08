@@ -9,6 +9,8 @@ interface BooksRepository {
 
     fun getAllBooks(): Flow<List<Book>>
 
+    fun getBooksFromGenre(genre: String): Flow<List<Book>>
+
     suspend fun insertBook(book: Book): Long
     suspend fun deleteBook(book: Book)
     suspend fun updateBook(book: Book)

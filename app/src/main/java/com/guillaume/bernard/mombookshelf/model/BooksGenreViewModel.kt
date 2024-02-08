@@ -9,19 +9,18 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-class DetailedBookViewModel(
+class BooksGenreViewModel(
     savedStateHandle: SavedStateHandle,
     repository: BooksRepository
 ) : ViewModel() {
 
-    private val id: Long = checkNotNull(savedStateHandle[MomsBookshelfScreen.BookDetail.arg])
-    val uiState: StateFlow<Book> = repository.getBook(id)
-        .map {
-            it ?: Book.defaultBook
-        }
+    val id: String =
+        checkNotNull(savedStateHandle[MomsBookshelfScreen.GenreDetail.arg]) // Should be a table with proper PK id, but it will do for the test i'm doing...
+
+    val uiState: StateFlow<List<Book>> = repository.getBooksFromGenre(id)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = Book()
+            initialValue = listOf()
         )
 }

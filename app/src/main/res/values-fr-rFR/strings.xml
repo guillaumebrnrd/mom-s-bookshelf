@@ -11,6 +11,7 @@
     <string name="title_newbook">Nouveau livre</string>
     <string name="title_editbook">Edit book</string>
     <string name="title_book_detail">Détail du livre</string>
+    <string name="title_genre">Genres</string>
 
     <string name="back_button">Retour</string>
     <string name="cancel_button">Annuler</string>

@@ -13,6 +13,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -32,6 +33,7 @@ import com.guillaume.bernard.mombookshelf.ui.components.BookView
 @Composable
 fun BookDetailScreen(
     modifier: Modifier = Modifier,
+    onGenreButtonClick: (String) -> Unit,
     onBackButtonClicked: () -> Unit,
     onEditBookButtonClicked: (Book) -> Unit,
     viewModel: DetailedBookViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -73,6 +75,9 @@ fun BookDetailScreen(
                     text = uiState.value.published.toString(),
                     style = MaterialTheme.typography.labelMedium
                 )
+                OutlinedButton(onClick = { onGenreButtonClick(uiState.value.genre) }) {
+
+                }
                 Text(
                     modifier = Modifier.padding(top = 6.dp),
                     text = uiState.value.description,
@@ -106,6 +111,7 @@ fun BookDetailScreenPreview() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
+        onGenreButtonClick = {},
         onBackButtonClicked = {},
         onEditBookButtonClicked = {}
     )
