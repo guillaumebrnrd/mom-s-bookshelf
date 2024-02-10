@@ -2,7 +2,7 @@
 ## About the project
 **Mom's Bookshelf** is an android/iOs application I made to learn Jetpack Compose multiplatform framework
 
-The aim of the app is not to be functionnal for users but to try the framework and good practises
+The aim of the app is not to be functional for users but to try the framework and good practises
 
 ## Tech
 Developed in Kotlin KMM with
@@ -18,7 +18,7 @@ Developed in Kotlin KMM with
 - Book cover fetching
 
 ## Maybe later
-- Syncronize data in cloud 
+- Synchronize data in cloud 
 - Sharing though some socials networks
 - Retrieve book's data from ISBN code (google books api)
-- Web version of the project in some techn I don't master yet (probably Spring Boot with kotlin!)
+- Web version of the project in some tech I don't master yet (probably Spring Boot with kotlin!)
