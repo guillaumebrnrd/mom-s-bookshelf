@@ -1,11 +1,11 @@
 # Mom's Bookshelf
 ## About the project
-**Mom's Bookshelf** is an android/iOs application I made to learn Jetpack Compose multiplatform framework
+**Mom's Bookshelf** is an android application I made to learn Jetpack Compose framework
 
 The aim of the app is not to be functional for users but to try the framework and good practises
 
 ## Tech
-Developed in Kotlin KMM with
+Developed in Kotlin with
 - viewModels
 - navigation
 - room
